@@ -3,6 +3,14 @@ main = "_worker.js"
 compatibility_date = "2025-11-04"
 keep_vars = true
 
+[[routes]]
+pattern = "lennutegde.moslb.com"
+zone_name = "moslb.com"
+
+[vars]
+ADMIN = "UHU7dOHl0jkbzRiG"
+URL = "500"
+
 [[kv_namespaces]]
 binding = "KV"
-id = "lennutegde"
+id = "2c69bb32ba6844f6b573dcbc1b702a99"
