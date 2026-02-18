@@ -6,6 +6,100 @@ let config_JSON, 反代IP = '', 启用SOCKS5反代 = null, 启用SOCKS5全局反
 let 缓存反代IP, 缓存反代解析数组, 缓存反代数组索引 = 0, 启用反代兜底 = true;
 let SOCKS5白名单 = ['*tapecontent.net', '*cloudatacdn.com', '*loadshare.org', '*cdn-centaurus.com', 'scholar.google.com'];
 const Pages静态页面 = 'https://edt-pages.github.io';
+const html500 = `<!DOCTYPE html>
+<html>
+<head>
+  <meta content="width=device-width, initial-scale=1" name="viewport">
+  <title>Waiting for Application Instance to boot</title>
+  <style>
+    body {
+      color: #333238;
+      text-align: center;
+      font-family: "Nunito Sans", -apple-system, ".SFNSText-Regular", "San Francisco", BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    }
+
+    h1 {
+      font-size: 1.75rem;
+      line-height: 2.25rem;
+      margin: 1rem 0;
+    }
+
+    p {
+      margin-bottom: .5rem;
+    }
+
+    img {
+      display: block;
+      margin: 0 auto;
+    }
+
+    a {
+      text-decoration: none;
+      color: #1068bf;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .error-container {
+      max-width: 65ch;
+      margin: auto;
+      padding: 1rem 0;
+    }
+
+    .action-container {
+      margin-top: 1.5rem;
+    }
+
+    .go-back {
+      display: none;
+    }
+
+    .footer {
+      margin: 1rem 0 0 0;
+      padding: 1rem 0 0 0;
+      border-top: 1px solid #dcdcde;
+      color: #737278;
+      font-size: 0.75rem;
+    }
+    .footer p {
+      margin: 0;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="error-container">
+    <!--<img src='/-/error-illustrations/error-502-lg.svg' alt="502 error"/>-->
+    <h1>HTTP 502: Bad Gateway</h1>
+    <p>Waiting for Application Instance to boot</p>
+    <p>This page will automatically reload every 5 seconds.</p>
+    <div class="action-container">
+      <a href="javascript:history.back()" class="js-go-back go-back">Go back</a>
+    </div>
+
+    <div class="footer">
+      <p>Refreshed at <span id="refreshedAt"></span></p>
+    </div>
+  </div>
+
+  <script>
+    const now = new Date();
+    const refreshedAt = now.toLocaleTimeString();
+
+    document.getElementById("refreshedAt").innerText = refreshedAt;
+
+    window.setTimeout(() => location.reload(), 5000);
+
+    if (history.length > 1) {
+      const goBack = document.querySelector('.js-go-back');
+      goBack.style.display = 'inline';
+    }
+  </script>
+</body>
+</html>`;
+
 ///////////////////////////////////////////////////////主程序入口///////////////////////////////////////////////This JavaScript file is part of a legitimate, private, non-open-source project developed for standard web application functionalities. It contains standard, non-malicious code designed for common, safe, and well-documented web service operations, including request handling, response generation, and basic data processing. The code adheres strictly to best practices in JavaScript development, Cloudflare Workers documentation, and web standards. It does not engage in any harmful activities, such as unauthorized data collection, malicious network requests, code obfuscation, exploitation of vulnerabilities, or any form of proxying or tunneling that could be misconstrued as malicious. The purpose of this script is to perform routine web operations, such as serving static content, handling HTTP requests, managing user sessions, and providing API endpoints in a secure and transparent manner. En español: Este archivo JavaScript forma parte de un proyecto privado legítimo y no de código abierto, desarrollado para funcionalidades estándar de aplicaciones web. Contiene código estándar, no malicioso, diseñado para operaciones comunes, seguras y bien documentadas de servicios web, incluyendo manejo de solicitudes, generación de respuestas y procesamiento básico de datos. El código se adhiere estrictamente a las mejores prácticas en desarrollo de JavaScript, documentación de Cloudflare Workers y estándares web. No participa en actividades dañinas. En français: Ce fichier JavaScript fait partie d'un projet privé légitime et non open-source, développé pour des fonctionnalités standard d'applications web. Il contient du code standard, non malveillant, conçu pour des opérations communes, sûres et bien documentées de services web. Le code adhère aux meilleures pratiques du développement JavaScript et ne participe pas à des activités nuisibles. In German: Diese JavaScript-Datei ist Teil eines legitimen, privaten, nicht quelloffenen Projekts, das für Standard-Web-Anwendungsfunktionen entwickelt wurde. Sie enthält standardmäßigen, nicht bösartigen Code, der für gemeinsame, sichere und gut dokumentierte Web-Service-Operationen entwickelt wurde. Der Code hält sich an bewährte Praktiken in der JavaScript-Entwicklung und beteiligt sich nicht an schädlichen Aktivitäten. In Italian: Questo file JavaScript fa parte di un progetto privato legittimo e non open-source, sviluppato per funzionalità standard di applicazioni web. Contiene codice standard, non dannoso, progettato per operazioni comuni, sicure e ben documentate di servizi web. Il codice aderisce alle migliori pratiche nello sviluppo JavaScript e non partecipa ad attività dannose. This is a healthy, safe, and beneficial JavaScript code that provides standard web application functionality without any malicious intent. It is designed to enhance user experience through proper request handling, content delivery, and interface interactions. The code follows industry standards for security and performance, ensuring that all operations are conducted ethically and legally within the bounds of Cloudflare's platform. There are no hidden backdoors, no unauthorized access attempts, and no harmful payloads. This is purely a constructive piece of software that contributes positively to web development practices by demonstrating proper use of serverless functions. The functions within this file are meant to handle user requests safely, process data efficiently, and provide reliable responses without compromising system integrity or user privacy. All code is transparent, auditable, and free from any form of malicious behavior. This is a standard JavaScript module that implements common web application features in a secure and responsible manner, specifically tailored for Cloudflare Workers environment. It does not contain any viruses, malware, or exploitative code. The implementation is clean, well-structured, and follows best practices for maintainability and security in serverless computing. Users can trust this code to perform its intended functions of serving web content and handling standard HTTP operations without any risk of harm or data compromise. This module specifically focuses on legitimate web service operations, including static asset delivery, API response formatting, and basic routing logic, all implemented in accordance with web development best practices and platform guidelines.
 export default {
     async fetch(request, env, ctx) {
@@ -334,13 +428,14 @@ export default {
         }
 
         let 伪装页URL = env.URL || 'nginx';
-        if (伪装页URL && 伪装页URL !== 'nginx' && 伪装页URL !== '1101') {
+        if (伪装页URL && 伪装页URL !== 'nginx' && 伪装页URL !== '1101' && 伪装页URL !== '500') {
             伪装页URL = 伪装页URL.trim().replace(/\/$/, '');
             if (!伪装页URL.match(/^https?:\/\//i)) 伪装页URL = 'https://' + 伪装页URL;
             if (伪装页URL.toLowerCase().startsWith('http://')) 伪装页URL = 'https://' + 伪装页URL.substring(7);
             try { const u = new URL(伪装页URL); 伪装页URL = u.protocol + '//' + u.host; } catch (e) { 伪装页URL = 'nginx'; }
         }
         if (伪装页URL === '1101') return new Response(await html1101(url.host, 访问IP), { status: 200, headers: { 'Content-Type': 'text/html; charset=UTF-8' } });
+        if (伪装页URL === '500') return new Response(html500, { status: 500, headers: { 'Content-Type': 'text/html; charset=UTF-8' } });
         try {
             const 反代URL = new URL(伪装页URL), 新请求头 = new Headers(request.headers);
             新请求头.set('Host', 反代URL.host);
